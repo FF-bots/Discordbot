@@ -21,21 +21,48 @@ const stream = T.stream('statuses/filter',{
     follow:'32771325',//StupidCounter
 });
 
+
 //[]
 
 init();
 
 function init(){
+    var twitActivo;
+
+    twitActivo = false;
+
     client.on('ready', ()=>{
         console.log("Bot is ready");
     });
     
     client.login(process.env.BOT_TOKEN);
+
+    activarTwitter();
+    stream.stop();
+    activarCambioRol();
     
     client.on('message', (msg)=>{
         if(msg.content === 'Hello') msg.reply('Hi');
         if(msg.content === '-papielon'){
-            activarTwitter();
+            if(!twitActivo){
+                twitActivo = true;
+                msg.reply('Llamando a Papi Elon');
+                stream.start();
+            }
+            else{
+                msg.reply("Papi Elon ya esta mandandote cositas lindas");
+            }
+            
+        }
+        if(msg.content ==='-papielon off'){
+            if(twitActivo){
+                twitActivo = false;
+                desactivarTwitter(msg);
+            }
+            else{
+                msg.reply("Papi elon ya esta desactivado");
+            }
+            
         }
     });
     
@@ -102,4 +129,9 @@ function activarTwitter(){
         return;
     })
 
+}
+
+function desactivarTwitter(msg){
+    msg.reply("Chau PapiElon");
+    stream.stop();
 }
