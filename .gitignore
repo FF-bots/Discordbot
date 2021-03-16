@@ -1,2 +1,2 @@
-.credenciales.txt/
-..env/
+.env
+credenciales.txt
